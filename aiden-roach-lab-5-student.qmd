@@ -147,9 +147,7 @@ included in the `teacher_evals_codebook.pdf`.
 ```{r}
 #| label: setup
 # code chunk for loading packages
-library(dplyr)
-library(readr)
-library(ggplot2)
+library(tidyverse)
 ```
 
 **2. Load in the `teacher_evals` data.** 
@@ -194,7 +192,13 @@ head(teacher)
 ```{r}
 #| label: data-cleaning
 # code chunk for Q4
+teacher_evals_clean <- teacher |>
+  rename(sex = gender) |>
+  filter(no_participants >= 10) |>
+  mutate(across(teacher_id | question_no, as.character)) |> 
+  select(course_id, teacher_id, question_no, no_participants, resp_share, SET_score_avg, percent_failed_cur, academic_degree, seniority, sex)
 
+write_csv(x = teacher_evals_clean, "data-clean/teacher_evals_clean.csv")
 ```
 
 **6. How many unique instructors and unique courses are present in the cleaned dataset?**
