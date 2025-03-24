@@ -235,19 +235,27 @@ teacher_clean |>
 #| label: exploring-demographics-of-instructors
 # code chunk for Q7
 teacher_clean |> 
-  select(academic_degree, seniority, sex) |> 
+  select(academic_degree, seniority, sex, teacher_id) |> 
+  group_by(sex, academic_degree) |>
   summarise(mean_seniority = mean(seniority),
-            n_degree = count(academic_degree), 
-            n_sex = n(sex))
+            n = n())
 ```
+             
+> The majority of teachers, when split by sex, have a dr degree. For males, those with a dr degree tend to have slightly more experience than teachers with a masters. For females, teachers with a masters degree have slightly less experience than those with a dr degree. For both males and females, those with no degrees have the least amount of experience.
 
 **9. Each course seems to have used a different subset of the nine evaluation questions. How many teacher-course combinations asked all nine questions?**
 
 ```{r}
 #| label: teacher-course-asked-every-question
 # code chunk for Q8
-
+teacher_clean |> 
+  select(question_no, teacher_id, course_id) |> 
+  group_by(teacher_id, course_id) |>
+  summarise(n = n_distinct(question_no)) |>
+  arrange(desc(n))
 ```
+           
+> 49 teacher-course combinations asked all nine questions.
 
 ## Rate my Professor
 
@@ -270,7 +278,11 @@ teacher_clean |>
 ```{r}
 #| label: one-year-experience-failing-students
 # code chunk for Q10
-
+teacher_clean |> 
+  select(teacher_id, percent_failed_cur, seniority) |>
+  filter(seniority <= 1) |> 
+  summarise(avg_rank = mean(SET_score_avg)) |> 
+  arrange(avg_rank)
 ```
 
 **12. Which female instructors with either a doctorate or professional degree had the highest and lowest average percent of students responding to the evaluation across all their courses?**
