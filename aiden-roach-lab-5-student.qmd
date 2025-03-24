@@ -280,15 +280,26 @@ teacher_clean |>
 # code chunk for Q10
 teacher_clean |> 
   select(teacher_id, percent_failed_cur, seniority) |>
-  filter(seniority <= 1) |> 
-  summarise(avg_rank = mean(SET_score_avg)) |> 
-  arrange(avg_rank)
+  distinct(teacher_id, percent_failed_cur, seniority) |>
+  filter(seniority <= 1) |>
+  group_by(teacher_id) |> 
+  arrange(percent_failed_cur)
 ```
+            
+> Teachers 98650, 106126, 84689, 86222, 102379, 98651, 84688, 103092, 80974 had 0% of students fail. Teacher 104362 had 75.54% of students fail.	
 
 **12. Which female instructors with either a doctorate or professional degree had the highest and lowest average percent of students responding to the evaluation across all their courses?**
 
 ```{r}
 #| label: female-instructor-student-response
 # code chunk for Q11
-
+teacher_clean |> 
+  select(teacher_id, academic_degree, resp_share, sex) |> 
+  distinct(teacher_id, academic_degree, sex, resp_share) |>
+  filter(sex == "female", academic_degree != "ma" & academic_degree != "no_dgr") |>
+  group_by(teacher_id) |> 
+  arrange(resp_share)
 ```
+                  
+> Teacher 3485 had the lowest proportion of responders with 0.01123596. Teacher 101508 had the highest proportion of responders with 0.52173913.
+                  
