@@ -234,7 +234,11 @@ teacher_clean |>
 ```{r}
 #| label: exploring-demographics-of-instructors
 # code chunk for Q7
-
+teacher_clean |> 
+  select(academic_degree, seniority, sex) |> 
+  summarise(mean_seniority = mean(seniority),
+            n_degree = count(academic_degree), 
+            n_sex = n(sex))
 ```
 
 **9. Each course seems to have used a different subset of the nine evaluation questions. How many teacher-course combinations asked all nine questions?**
@@ -252,9 +256,15 @@ teacher_clean |>
 ```{r}
 #| label: question-1-high-low
 # code chunk for Q9
-
+teacher_clean |> 
+  select(teacher_id, SET_score_avg) |> 
+  group_by(teacher_id) |> 
+  summarise(avg_rank = mean(SET_score_avg)) |> 
+  arrange(avg_rank)
 ```
-
+                     
+> Teachers 3682, 36250, 37013, 37023, 50714, 50740, 50759, 50790, 54309, 54665, 57254, 59338, 61502, 63917, 66073, 66244, 66275, 66290, 67678, 69446 had the highest rating of 5.0000 and teacher 54201 had the lowest rating of 1.0000                    
+                     
 **11. Which instructors with one year of experience had the highest and lowest average percentage of students failing in the current semester across all their courses?**
 
 ```{r}
