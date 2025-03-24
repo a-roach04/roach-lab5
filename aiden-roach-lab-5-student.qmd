@@ -222,8 +222,12 @@ teacher_clean |>
 ```{r}
 #| label: uncovering-missing-values
 # code chunk for Q6
-
+teacher_clean |>
+  filter(if_any(.cols = -teacher_id, 
+                .fns = is.na))
 ```
+           
+> Teacher 56347, course PAB3SE004PA, is missing values for percent_failed_cur.                
 
 **8. What are the demographics of the instructors in this study? Investigate the variables `academic_degree`, `seniority`, and `sex` and summarize your findings in ~3 complete sentences.**
 
