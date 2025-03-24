@@ -206,8 +206,16 @@ write_csv(x = teacher_evals_clean, "data-clean/teacher_evals_clean.csv")
 ```{r}
 #| label: unique-courses
 # code chunk for Q5
+teacher_clean <- read_csv("data-clean/teacher_evals_clean.csv")
 
+teacher_clean |>
+  summarise(n_distinct(teacher_id))     
+
+teacher_clean |>
+  summarise(n_distinct(course_id))
 ```
+        
+> There are 939 unique courses and 297 unique teachers.
 
 **7. One teacher-course combination has some missing values, coded as `NA`. Which instructor has these missing values? Which course? What variable are the missing values in?**
 
